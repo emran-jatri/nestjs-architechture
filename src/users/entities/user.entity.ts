@@ -1,16 +1,37 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoosePaginate from 'mongoose-paginate-v2';
+import { UserType } from 'src/enums/usertype';
 
 export type UserDocument = User & Document;
 
-@Schema()
+@Schema({timestamps: true})
 export class User {
   @Prop()
-  name: string;
+	firstName: string
+	
+	@Prop()
+	lastName: string
+	
+	@Prop()
+	username: string
 
-  @Prop()
-  age: number;
+	@Prop({select: false})
+	// @Exclude()
+	password: string
+
+	@Prop()
+	email: string
+
+	@Prop()
+	phone: string
+
+	@Prop()
+	userType: UserType
+
+	constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
 }
 
 const schema = SchemaFactory.createForClass(User);
