@@ -5,7 +5,7 @@ import { UserType } from 'src/enums/usertype';
 
 export type UserDocument = User & Document;
 
-@Schema({timestamps: true})
+@Schema({ timestamps: true })
 export class User {
   @Prop()
 	firstName: string
@@ -16,8 +16,7 @@ export class User {
 	@Prop()
 	username: string
 
-	@Prop({select: false})
-	// @Exclude()
+	@Prop()
 	password: string
 
 	@Prop()
@@ -28,10 +27,6 @@ export class User {
 
 	@Prop()
 	userType: UserType
-
-	constructor(partial: Partial<User>) {
-    Object.assign(this, partial);
-  }
 }
 
 const schema = SchemaFactory.createForClass(User);

@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserPagenateDto } from './dto/user-paginate.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -9,18 +10,23 @@ export class UsersController {
 
 	// @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+		const user = await this.usersService.create(createUserDto);
+		return user
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
+	@Get()
+	// @UsePipes(new ValidationPipe({ whitelist: false}))
+	findAll(@Query() userPagenateDto: UserPagenateDto) {
+		console.log('----------->', userPagenateDto);
+		
+    return this.usersService.findAll(userPagenateDto);
   }
 
+	// @MongooseClassSerializerInterceptor( UserDto )
   @Get(':id')
-  async findOne(@Param('username') username: string) {
-		const user = await this.usersService.findOne(username);
+  async findOne(@Param('id') id: string) {
+		const user = await this.usersService.findOne(id);
 		if (!user) {
 			throw new NotFoundException()
 		}
