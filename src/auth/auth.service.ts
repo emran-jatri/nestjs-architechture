@@ -1,15 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from 'src/users/entities/user.entity';
-import { PaginateModel } from 'mongoose';
+import { JwtService } from '@nestjs/jwt';
+import { UsersService } from './../users/users.service';
 
 @Injectable()
 export class AuthService {
-
-	constructor(@InjectModel(User.name) private userModel: PaginateModel<UserDocument>) {}
+	constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService
+  ) {}
 
 
   login(loginDto) {
-    return loginDto
+    const payload = loginDto;
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
