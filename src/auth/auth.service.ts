@@ -29,13 +29,37 @@ export class AuthService {
 		delete user.password
 		
 
-		const [access_token, refresh_token] = await Promise.all([
-			this.jwtService.signAsync(user,{secret: 'access_token', expiresIn: '1d'}),
-			this.jwtService.signAsync(user,{secret: "refresh_token", expiresIn: '7d'})
+		const [accessToken, refreshToken] = await Promise.all([
+			this.jwtService.signAsync(user,{secret: 'accessToken', expiresIn: '1d'}),
+			this.jwtService.signAsync(user,{secret: "refreshToken", expiresIn: '7d'})
 		])
     return {
-      access_token,
-      refresh_token,
+      accessToken,
+      refreshToken,
     };
-  }
+	}
+
+	async refreshToken(refreshTokenDto) {
+
+		const userData = await this.jwtService.verifyAsync(refreshTokenDto.token, {secret:"refreshToken"})		
+
+		const user: User = await this.usersService.findByUsername(userData.username)
+
+		if (!user) {
+			throw new UnauthorizedException("Invalid credentials!")
+		}
+
+		delete user.password
+		
+
+		const [accessToken, refreshToken] = await Promise.all([
+			this.jwtService.signAsync(user,{secret: 'accessToken', expiresIn: '1d'}),
+			this.jwtService.signAsync(user,{secret: "refreshToken", expiresIn: '7d'})
+		])
+    return {
+      accessToken,
+      refreshToken,
+    };
+	}
+	
 }
