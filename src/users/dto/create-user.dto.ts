@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { UserType } from 'src/enums/usertype';
 
 export class CreateUserDto {
@@ -32,6 +32,7 @@ export class CreateUserDto {
 
 	@ApiProperty()
 	@IsString()
+	@IsEnum(UserType)
 	userType: UserType
 
 }
