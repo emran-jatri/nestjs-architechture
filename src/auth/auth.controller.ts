@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import {  RefreshTokenDto } from './dto/refreshTokenDto';
+import { RefreshTokenDto } from './dto/refreshTokenDto';
 
 @Controller('auth')
 export class AuthController {
@@ -12,7 +12,7 @@ export class AuthController {
   login(@Body() loginDto: LoginDto) {
 		return this.authService.login(loginDto);
 	}
-	
+
 	@Post('refresh-token')
 	@UsePipes(new ValidationPipe({ whitelist: true}))
 	refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {

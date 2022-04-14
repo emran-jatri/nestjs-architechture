@@ -1,4 +1,5 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
@@ -6,6 +7,9 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
+
+	const configService = app.get(ConfigService);
+
 	app.use(helmet());
 	app.enableCors();
 	app.useGlobalPipes(
@@ -19,14 +23,17 @@ async function bootstrap() {
 	);
 	
 	const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('Nest.js Architecture')
+    .setDescription('Nest.js Basic API description')
     .setVersion('1.0')
-    .addTag('cats')
+    .addTag('Nest.js')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(5050);
+	const port = configService.get('PORT') || 5000;
+	console.log('----------->', port);
+	
+  await app.listen(port);
 }
 bootstrap();
