@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './entities/user.entity';
 import { UserPagenateDto } from './dto/user-paginate.dto';
+import * as argon2 from "argon2";
 
 @Injectable()
 export class UsersService {
@@ -14,18 +15,21 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
 		const saltOrRounds = 10;
-		createUserDto.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
+		// createUserDto.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
+		createUserDto.password = await argon2.hash(createUserDto.password);
+		console.log('------>', createUserDto);
+
 		const createdUser = new this.userModel(createUserDto);
 		// return createdUser.save();
 		const newUser: any = await createdUser.save();
 		const {password, ...responseUser } = newUser._doc
 		return responseUser
-		
+
   }
 
 	findAll(userPagenateDto) {
 		// console.log(userPagenateDto, typeof userPagenateDto.page, typeof userPagenateDto.limit);
-		
+
 		const query = {}
 		const options = { page: userPagenateDto.page, limit: userPagenateDto.limit, select: '-password'}
 		return this.userModel.paginate(query, options);
@@ -37,7 +41,7 @@ export class UsersService {
   async findByUsername(username: string): Promise<User | undefined> {
     return this.userModel.findOne({username}).lean()
 	}
-	
+
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;

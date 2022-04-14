@@ -1,4 +1,6 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from './../common/guards/JwtAuthGuard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserPagenateDto } from './dto/user-paginate.dto';
@@ -15,11 +17,13 @@ export class UsersController {
 		return user
   }
 
+	@UseGuards(AuthGuard('jwt'))
 	@Get()
 	// @UsePipes(new ValidationPipe({ whitelist: false}))
-	findAll(@Query() userPagenateDto: UserPagenateDto) {
+	findAll(@Req() req, @Query() userPagenateDto: UserPagenateDto) {
 		console.log('----------->', userPagenateDto);
-		
+		console.log('req.user ----------->', req.user);
+
     return this.usersService.findAll(userPagenateDto);
   }
 

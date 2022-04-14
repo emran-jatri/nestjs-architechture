@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose, Transform } from "class-transformer";
 import { IsOptional, IsString } from 'class-validator';
-import { UserType } from 'src/enums/usertype';
+import { UserType } from 'src/common/enums/UserType';
 
 export class UserDto {
 	

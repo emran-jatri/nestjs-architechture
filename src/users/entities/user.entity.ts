@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoosePaginate from 'mongoose-paginate-v2';
-import { UserType } from 'src/enums/usertype';
+import { UserType } from 'src/common/enums/UserType';
 
 export type UserDocument = User & Document;
 
@@ -9,10 +9,10 @@ export type UserDocument = User & Document;
 export class User {
   @Prop()
 	firstName: string
-	
+
 	@Prop()
 	lastName: string
-	
+
 	@Prop()
 	username: string
 

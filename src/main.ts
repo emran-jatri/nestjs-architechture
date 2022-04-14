@@ -2,16 +2,18 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as compression from 'compression';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
-
 	const configService = app.get(ConfigService);
 
+	app.setGlobalPrefix('api');
 	app.use(helmet());
 	app.enableCors();
+	app.use(compression());
 	app.useGlobalPipes(
 		new ValidationPipe({
 			// whitelist: true,
@@ -21,7 +23,7 @@ async function bootstrap() {
 			}
 		})
 	);
-	
+
 	const config = new DocumentBuilder()
     .setTitle('Nest.js Architecture')
     .setDescription('Nest.js Basic API description')
@@ -29,11 +31,11 @@ async function bootstrap() {
     .addTag('Nest.js')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+	SwaggerModule.setup('api', app, document);
 
 	const port = configService.get('PORT') || 5000;
-	console.log('----------->', port);
-	
+	// console.log('----------->', port);
+
   await app.listen(port);
 }
 bootstrap();
