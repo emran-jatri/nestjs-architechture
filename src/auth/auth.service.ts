@@ -1,8 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as argon2 from 'argon2';
+import { JwtConstants } from 'src/common/constants';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from './../users/users.service';
-import * as argon2 from 'argon2'
 
 @Injectable()
 export class AuthService {
@@ -29,15 +30,25 @@ export class AuthService {
 
 		delete user.password
 
-
 		const [accessToken, refreshToken] = await Promise.all([
-			this.jwtService.signAsync(user,{secret: 'accessToken', expiresIn: '1d'}),
-			this.jwtService.signAsync(user,{secret: "refreshToken", expiresIn: '7d'})
+			this.jwtService.signAsync(user, {
+				secret: JwtConstants.ACCESS_TOKEN_SECRET,
+				expiresIn: JwtConstants.ACCESS_TOKEN_EXPIRE_IN
+			}),
+			this.jwtService.signAsync(user, {
+				secret: JwtConstants.REFRESH_TOKEN_SECRET,
+				expiresIn: JwtConstants.REFRESH_TOKEN_EXPIRE_IN
+			})
 		])
-    return {
+
+		const responsePayload = {
+			statusCode: HttpStatus.OK,
+			message:"Login Successfully!",
       accessToken,
       refreshToken,
-    };
+		}
+
+		return responsePayload;
 	}
 
 	async refreshToken(refreshTokenDto) {
