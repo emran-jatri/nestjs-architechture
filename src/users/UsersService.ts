@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import * as bcrypt from 'bcrypt';
-import { PaginateModel } from 'mongoose';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User, UserDocument } from './entities/user.entity';
-import { UserPagenateDto } from './dto/user-paginate.dto';
 import * as argon2 from "argon2";
+import { PaginateModel } from 'mongoose';
+import { CreateUserDto } from './dtos/CreateUserDto';
+import { UpdateUserDto } from './dtos/UpdateUserDto';
+import { User, UserDocument } from './entities/UserEntity';
 
 @Injectable()
 export class UsersService {

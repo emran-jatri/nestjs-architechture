@@ -7,16 +7,16 @@ export type UserDocument = User & Document;
 
 @Schema({ timestamps: true })
 export class User {
-  @Prop()
+  @Prop({trim: true, required: true})
 	firstName: string
 
-	@Prop()
+	@Prop({trim: true, required: true})
 	lastName: string
 
-	@Prop()
+	@Prop({trim: true, required: true})
 	username: string
 
-	@Prop()
+	@Prop({trim: true, required: true})
 	password: string
 
 	@Prop()
@@ -25,8 +25,11 @@ export class User {
 	@Prop()
 	phone: string
 
-	@Prop()
+	@Prop({trim: true, required: true})
 	userType: UserType
+
+	@Prop()
+	permissions: number[]
 }
 
 const schema = SchemaFactory.createForClass(User);

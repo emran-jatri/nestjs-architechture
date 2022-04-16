@@ -1,10 +1,9 @@
 
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
-import { IsNumberString, IsOptional } from 'class-validator';
 
-export class UserPagenateDto{
+export class PagenateDto{
 	@ApiProperty({default: 1})
+// @ApiQuery({default: 1})
 	// @Type(() => Number)
 	page: number
 

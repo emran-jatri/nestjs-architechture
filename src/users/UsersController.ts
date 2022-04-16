@@ -1,12 +1,15 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Permissions } from 'src/common/constants';
+import { HasPermission } from 'src/common/decorators';
+import { PagenateDto } from 'src/common/dtos';
 import { UserType } from 'src/common/enums/UserType';
-import { JwtAuthGuard } from 'src/common/guards';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserPagenateDto } from './dto/user-paginate.dto';
-import { UsersService } from './users.service';
-import { IsType } from './../common/decorators/UserTypeDecorator';
+import { IsType } from '../common/decorators/UserTypeDecorator';
+import { CreateUserDto, UpdateUserDto } from './dtos';
 
+import { UsersService } from './UsersService';
+
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -18,15 +21,16 @@ export class UsersController {
 		return user
   }
 
-	@UseGuards(JwtAuthGuard)
+
 	@IsType(UserType.ADMIN)
+	@HasPermission(Permissions.Admin.USER_WRITE)
 	@Get()
 	// @UsePipes(new ValidationPipe({ whitelist: false}))
-	findAll(@Req() req, @Query() userPagenateDto: UserPagenateDto) {
+	findAll(@Req() req, @Query() pagenateDto: PagenateDto) {
 		// console.log('----------->', userPagenateDto);
 		console.log('req.user ----------->', req.user);
 
-    return this.usersService.findAll(userPagenateDto);
+    return this.usersService.findAll(pagenateDto);
   }
 
 	// @MongooseClassSerializerInterceptor( UserDto )
