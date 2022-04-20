@@ -32,7 +32,7 @@ export class UsersService {
   async findOne(id: string): Promise<User | undefined> {
     return this.userModel.findById(id).select('-password')
 	}
-	
+
   async findByUsername(username: string): Promise<User | undefined> {
     return this.userModel.findOne({username}).lean()
 	}
@@ -43,7 +43,7 @@ export class UsersService {
 
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    return `This action updates a #${id} user!`;
   }
 
   remove(id: number) {
