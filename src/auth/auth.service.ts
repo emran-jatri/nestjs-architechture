@@ -13,17 +13,16 @@ export class AuthService {
   ) {}
 
 
-  async login(loginDto) {
-
-		const user: User = await this.usersService.findByUsername(loginDto.username)
+	async login(loginDto) {
+		const user: any = await this.usersService.findByUsername(loginDto.username)
 
 		if (!user) {
 			throw new UnauthorizedException("Invalid credentials!")
 		}
 
 		// const validUser: boolean =  await bcrypt.compare(loginDto.password, user.password)
-		const validUser: boolean =  await argon2.verify( user.password, loginDto.password)
-
+		const validUser: boolean = await argon2.verify(user.password, loginDto.password)
+		
 		if (!validUser) {
 			throw new UnauthorizedException("Invalid credentials!")
 		}
@@ -35,7 +34,7 @@ export class AuthService {
 				secret: JwtConstants.ACCESS_TOKEN_SECRET,
 				expiresIn: JwtConstants.ACCESS_TOKEN_EXPIRE_IN
 			}),
-			this.jwtService.signAsync(user, {
+			this.jwtService.signAsync({_id: user._id}, {
 				secret: JwtConstants.REFRESH_TOKEN_SECRET,
 				expiresIn: JwtConstants.REFRESH_TOKEN_EXPIRE_IN
 			})
@@ -55,7 +54,7 @@ export class AuthService {
 
 		const userData = await this.jwtService.verifyAsync(refreshTokenDto.token, {secret:"refreshToken"})
 
-		const user: User = await this.usersService.findByUsername(userData.username)
+		const user: User = await this.usersService.findById(userData._id)
 
 		if (!user) {
 			throw new UnauthorizedException("Invalid credentials!")

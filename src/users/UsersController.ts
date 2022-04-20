@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, Req } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Permissions } from 'src/common/constants';
-import { HasPermission } from 'src/common/decorators';
+import { HasPermission, Public } from 'src/common/decorators';
 import { PagenateDto } from 'src/common/dtos';
 import { UserType } from 'src/common/enums/UserType';
 import { IsType } from '../common/decorators/UserTypeDecorator';
@@ -14,6 +14,7 @@ import { UsersService } from './UsersService';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+	@Public()
 	// @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -27,9 +28,6 @@ export class UsersController {
 	@Get()
 	// @UsePipes(new ValidationPipe({ whitelist: false}))
 	findAll(@Req() req, @Query() pagenateDto: PagenateDto) {
-		// console.log('----------->', userPagenateDto);
-		console.log('req.user ----------->', req.user);
-
     return this.usersService.findAll(pagenateDto);
   }
 

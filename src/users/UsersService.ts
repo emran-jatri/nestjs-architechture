@@ -15,10 +15,8 @@ export class UsersService {
 		const saltOrRounds = 10;
 		// createUserDto.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
 		createUserDto.password = await argon2.hash(createUserDto.password);
-		console.log('------>', createUserDto);
 
 		const createdUser = new this.userModel(createUserDto);
-		// return createdUser.save();
 		const newUser: any = await createdUser.save();
 		const {password, ...responseUser } = newUser._doc
 		return responseUser
@@ -26,8 +24,6 @@ export class UsersService {
   }
 
 	findAll(userPagenateDto) {
-		// console.log(userPagenateDto, typeof userPagenateDto.page, typeof userPagenateDto.limit);
-
 		const query = {}
 		const options = { page: userPagenateDto.page, limit: userPagenateDto.limit, select: '-password'}
 		return this.userModel.paginate(query, options);
@@ -36,8 +32,13 @@ export class UsersService {
   async findOne(id: string): Promise<User | undefined> {
     return this.userModel.findById(id).select('-password')
 	}
+	
   async findByUsername(username: string): Promise<User | undefined> {
     return this.userModel.findOne({username}).lean()
+	}
+
+	async findById(id: string): Promise<User | undefined> {
+    return this.userModel.findById(id).lean()
 	}
 
 
