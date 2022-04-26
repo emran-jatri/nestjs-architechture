@@ -13,7 +13,8 @@ export class User {
 	@Prop({trim: true, required: true})
 	lastName: string
 
-	@Prop({trim: true, required: true, unique: true})
+	// type must be set while unique true
+	@Prop({type: String, trim: true, required: true, unique: true})
 	username: string
 
 	@Prop({ trim: true, required: true })
