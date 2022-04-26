@@ -12,14 +12,20 @@ export class UsersService {
 	constructor(@InjectModel(User.name) private userModel: PaginateModel<UserDocument>) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-		const saltOrRounds = 10;
-		// createUserDto.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
-		createUserDto.password = await argon2.hash(createUserDto.password);
-
-		const createdUser = new this.userModel(createUserDto);
-		const newUser: any = await createdUser.save();
-		const {password, ...responseUser } = newUser._doc
-		return responseUser
+		try {
+			
+			// const saltOrRounds = 10;
+			// createUserDto.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
+			createUserDto.password = await argon2.hash(createUserDto.password);
+	
+			const createdUser = new this.userModel(createUserDto);
+			const newUser: any = await createdUser.save();			
+			
+			const {password, ...responseUser } = newUser._doc
+			return responseUser
+		} catch (error) {
+			throw new HttpException(error ? error.message : "Something went wrong!", HttpStatus.INTERNAL_SERVER_ERROR)
+		}
 
   }
 

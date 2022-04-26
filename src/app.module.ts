@@ -11,7 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 	ConfigModule.forRoot({
 			isGlobal: true,
 		}),
-		MongooseModule.forRoot('mongodb://localhost/nest'),
+		MongooseModule.forRoot('mongodb://localhost/nest',{autoIndex: true}),
 		UsersModule,
 		AuthModule,
 	],

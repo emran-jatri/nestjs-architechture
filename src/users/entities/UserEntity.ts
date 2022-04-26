@@ -7,16 +7,16 @@ export type UserDocument = User & Document;
 
 @Schema({ timestamps: true })
 export class User {
-  @Prop({trim: true, required: true})
+  @Prop({trim: true, required: [true,'firstName is required!']})
 	firstName: string
 
 	@Prop({trim: true, required: true})
 	lastName: string
 
-	@Prop({trim: true, required: true})
+	@Prop({trim: true, required: true, unique: true})
 	username: string
 
-	@Prop({trim: true, required: true})
+	@Prop({ trim: true, required: true })
 	password: string
 
 	@Prop()
