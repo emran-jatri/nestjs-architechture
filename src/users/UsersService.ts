@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as argon2 from "argon2";
 import { PaginateModel } from 'mongoose';
@@ -42,11 +42,24 @@ export class UsersService {
 	}
 
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user!`;
+	async update(id: string, updateUserDto: UpdateUserDto) {
+		try {
+			if (updateUserDto.password) {
+				updateUserDto.password = await argon2.hash(updateUserDto.password);
+			}
+			return this.userModel.findByIdAndUpdate(id, { $set: updateUserDto }, { new: true, runValidators: true, select: '-password' });
+			
+		} catch (error) {
+			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+		}
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user!`;
-  }
+	async remove(id: string) {
+		const user = await this.userModel.findByIdAndDelete(id);
+		if (!user) {
+			throw new HttpException("User not found!", HttpStatus.NOT_FOUND)
+		}
+			
+		return user
+	}
 }
