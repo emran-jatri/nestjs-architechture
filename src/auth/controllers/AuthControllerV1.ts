@@ -1,12 +1,12 @@
 import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Public } from 'src/common/decorators';
-import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
-import { RefreshTokenDto } from './dto/refreshTokenDto';
+import { LoginDto } from '../dtos/LoginDto';
+import { RefreshTokenDto } from '../dtos/RefreshTokenDto';
+import { AuthService } from '../services/AuthServiceV1';
 
 @Public()
 @Controller('auth')
-export class AuthController {
+export class AuthControllerV1 {
   constructor(private readonly authService: AuthService) {}
 
 	@UsePipes(new ValidationPipe({ whitelist: true}))

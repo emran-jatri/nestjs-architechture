@@ -1,13 +1,13 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as argon2 from "argon2";
 import { PaginateModel } from 'mongoose';
-import { CreateUserDto } from './dtos/CreateUserDto';
-import { UpdateUserDto } from './dtos/UpdateUserDto';
-import { User, UserDocument } from './entities/UserEntity';
+import { CreateUserDto } from '../dtos/CreateUserDto';
+import { UpdateUserDto } from '../dtos/UpdateUserDto';
+import { User, UserDocument } from '../entities/UserEntity';
 
 @Injectable()
-export class UsersService {
+export class UsersServiceV1 {
 
 	constructor(@InjectModel(User.name) private userModel: PaginateModel<UserDocument>) {}
 
