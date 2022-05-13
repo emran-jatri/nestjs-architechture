@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as compression from 'compression';
 import helmet from 'helmet';
+import * as morgan from 'morgan';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -16,6 +17,7 @@ async function bootstrap() {
 		defaultVersion: '1',
 	});
 	app.use(helmet());
+	app.use(morgan('dev'));
 	app.enableCors();
 	app.use(compression());
 	app.useGlobalPipes(
@@ -36,7 +38,7 @@ async function bootstrap() {
 		.addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-	SwaggerModule.setup('api', app, document);
+	SwaggerModule.setup('swagger', app, document);
 
 	const port = configService.get('PORT') || 5000;
   await app.listen(port);

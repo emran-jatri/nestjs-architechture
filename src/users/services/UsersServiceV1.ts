@@ -19,10 +19,7 @@ export class UsersServiceV1 {
 			createUserDto.password = await argon2.hash(createUserDto.password);
 	
 			const createdUser = new this.userModel(createUserDto);
-			const newUser: any = await createdUser.save();			
-			
-			const {password, ...responseUser } = newUser._doc
-			return responseUser
+			return createdUser.save();
 		} catch (error) {
 			throw new HttpException(error ? error.message : "Something went wrong!", HttpStatus.INTERNAL_SERVER_ERROR)
 		}
@@ -31,12 +28,12 @@ export class UsersServiceV1 {
 
 	findAll(userPagenateDto) {
 		const query = {}
-		const options = { page: userPagenateDto.page, limit: userPagenateDto.limit, select: '-password'}
+		const options = { page: userPagenateDto.page, limit: userPagenateDto.limit}
 		return this.userModel.paginate(query, options);
   }
 
   async findOne(id: string): Promise<User | undefined> {
-    return this.userModel.findById(id).select('-password')
+    return this.userModel.findById(id)
 	}
 
   async findByUsername(username: string): Promise<User | undefined> {

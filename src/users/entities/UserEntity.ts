@@ -5,7 +5,21 @@ import { UserType } from 'src/common/enums/UserType';
 
 export type UserDocument = User & Document;
 
-@Schema({ timestamps: true })
+@Schema({
+	timestamps: true,
+	toObject: {
+    transform: function (doc, ret) {
+      delete ret.password;
+      delete ret.__v;
+    }
+  },
+  toJSON: {
+    transform: function (doc, ret) {
+      delete ret.password;
+      delete ret.__v;
+    }
+  }
+})
 export class User {
   @Prop({trim: true, required: [true,'firstName is required!']})
 	firstName: string
