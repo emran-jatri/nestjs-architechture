@@ -5,10 +5,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { UserTypeGuard, JwtAuthGuard, HasPermissionGuard } from 'src/common/guards';
 import { APP_GUARD } from '@nestjs/core';
+import { EnvConfigs } from './common/configs';
 
 @Module({
 	imports: [
-	ConfigModule.forRoot({
+		ConfigModule.forRoot({
+			load: [EnvConfigs],
 			isGlobal: true,
 		}),
 		MongooseModule.forRoot('mongodb://localhost/nest',{autoIndex: true}),

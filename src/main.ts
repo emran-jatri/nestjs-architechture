@@ -1,4 +1,4 @@
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -6,10 +6,13 @@ import * as compression from 'compression';
 import helmet from 'helmet';
 import * as morgan from 'morgan';
 import { AppModule } from './app.module';
+import { EnvConfigs } from './common/configs'
+import * as os from 'os'
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	const configService = app.get(ConfigService);
+	const logger = new Logger()
 
 	app.setGlobalPrefix('api');
 	app.enableVersioning({
@@ -41,6 +44,10 @@ async function bootstrap() {
 	SwaggerModule.setup('swagger', app, document);
 
 	const port = configService.get('PORT') || 5000;
-  await app.listen(port);
+	const ip = os.networkInterfaces().Ethernet[1].address
+	logger.log(`Server running on http://${ip}:${port}`);
+	await app.listen(port);
+	
 }
+
 bootstrap();
